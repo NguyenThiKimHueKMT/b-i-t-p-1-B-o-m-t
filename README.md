@@ -1,4 +1,19 @@
-# b-i-t-p-1-B-o-m-t
+
+BÀI TẬP MÔN: An toàn và bảo mật thông tin
+BÀI TẬP 1:
+TÌM HIỂU CÁC PHƯƠNG PHÁP MÃ HOÁ CỔ ĐIỂN
+Caesar
+Affine
+Hoán vị
+Vigenère
+Playfair
+Với mỗi phương pháp, hãy tìm hiểu:
+
+Tên gọi
+Thuật toán mã hoá, thuật toán giải mã
+Không gian khóa
+Cách phá mã (mà không cần khoá)
+Cài đặt thuật toán mã hoá và giải mã bằng code C++ và bằng html+css+javascript
 <img width="1190" height="687" alt="Ảnh chụp màn hình 2025-09-25 154158" src="https://github.com/user-attachments/assets/bec5f127-cc57-49dd-ba61-7b1acebbbfa8" />
 <img width="1155" height="633" alt="Ảnh chụp màn hình 2025-09-25 154204" src="https://github.com/user-attachments/assets/a321c3a7-4510-49aa-9c46-6cd57d734432" />
 <img width="1134" height="602" alt="Ảnh chụp màn hình 2025-09-25 154622" src="https://github.com/user-attachments/assets/ae883a8a-c7f3-4cef-826d-c0e3aab11710" />
