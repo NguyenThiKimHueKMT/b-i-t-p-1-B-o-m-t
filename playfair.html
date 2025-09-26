@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mã hóa Playfair</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;max-width:800px;margin:2rem auto;padding:1rem}
+    label{display:block;margin-top:0.6rem}
+    textarea{width:100%;height:120px}
+    input[type=text]{width:100%}
+    button{padding:8px 12px;margin-top:8px}
+    .out{white-space:pre-wrap;background:#fafafa;padding:10px;border:1px solid #ddd;margin-top:10px}
+    pre{background:#f7f7f7;padding:8px}
+  </style>
+</head>
+<body>
+  <h1>Mã hóa Playfair</h1>
+
+
+  <label>Nhập văn bản:
+    <textarea id="text"></textarea>
+  </label>
+
+  <label>Khóa:
+    <input type="text" id="key" value="">
+  </label>
+
+  <div>
+    <button id="enc">Mã hóa</button>
+    <button id="dec">Giải mã</button>
+  </div>
+
+  <h3>Bảng 5x5</h3>
+  <pre id="square"></pre>
+
+  <h3>Kết quả</h3>
+  <div id="output" class="out"></div>
+
+<script>
+function clean(s){ return s.toUpperCase().replace(/[^A-Z]/g,''); }
+
+function build_square(key){
+  const k=clean(key);
+  const used=Array(26).fill(false);
+  used['J'.charCodeAt(0)-65]=true;
+  const seq=[];
+  for(let ch of k){
+    if(ch==='J') ch='I';
+    if(!used[ch.charCodeAt(0)-65]){used[ch.charCodeAt(0)-65]=true;seq.push(ch);}
+  }
+  for(let i=0;i<26;i++) if(!used[i]) seq.push(String.fromCharCode(65+i));
+  const m=[];
+  for(let r=0;r<5;r++) m.push(seq.slice(r*5,r*5+5));
+  return m;
+}
+function square_str(m){return m.map(r=>r.join(' ')).join('\\n');}
+function find(m,ch){if(ch==='J')ch='I';for(let r=0;r<5;r++)for(let c=0;c<5;c++)if(m[r][c]===ch)return [r,c];return[-1,-1];}
+function prepare(pt){
+  let s=clean(pt).replace(/J/g,'I');
+  let out='';
+  for(let i=0;i<s.length;){
+    const a=s[i],b=(i+1<s.length)?s[i+1]:'';
+    if(b==='' ){out+=a+'X';i++;}
+    else if(a===b){out+=a+'X';i++;}
+    else {out+=a+b;i+=2;}
+  }
+  if(out.length%2===1) out+='X';
+  return out;
+}
+
+function encrypt(pt,key){
+  const m=build_square(key);
+  const s=prepare(pt);
+  let out='';
+  for(let i=0;i<s.length;i+=2){
+    const [r1,c1]=find(m,s[i]);
+    const [r2,c2]=find(m,s[i+1]);
+    if(r1===r2){out+=m[r1][(c1+1)%5]+m[r2][(c2+1)%5];}
+    else if(c1===c2){out+=m[(r1+1)%5][c1]+m[(r2+1)%5][c2];}
+    else {out+=m[r1][c2]+m[r2][c1];}
+  }
+  return out;
+}
+function decrypt(ct,key){
+  const m=build_square(key);
+  const s=clean(ct).replace(/J/g,'I');
+  let out='';
+  for(let i=0;i<s.length;i+=2){
+    const [r1,c1]=find(m,s[i]);
+    const [r2,c2]=find(m,s[i+1]);
+    if(r1===r2){out+=m[r1][(c1+4)%5]+m[r2][(c2+4)%5];}
+    else if(c1===c2){out+=m[(r1+4)%5][c1]+m[(r2+4)%5][c2];}
+    else {out+=m[r1][c2]+m[r2][c1];}
+  }
+  // 🔥 loại bỏ X padding: giữa 2 ký tự giống nhau hoặc ở cuối
+  return out.replace(/X(?=[A-Z])/g,'').replace(/X+$/,'');
+}
+
+/* UI */
+function updateSquare(){
+  document.getElementById('square').textContent=square_str(build_square(document.getElementById('key').value));
+}
+document.getElementById('enc').onclick=()=>{
+  document.getElementById('output').textContent=encrypt(document.getElementById('text').value,document.getElementById('key').value);
+  updateSquare();
+};
+document.getElementById('dec').onclick=()=>{
+  document.getElementById('output').textContent=decrypt(document.getElementById('text').value,document.getElementById('key').value);
+  updateSquare();
+};
+updateSquare();
+</script>
+</body>
+</html>

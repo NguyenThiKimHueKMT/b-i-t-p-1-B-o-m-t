@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mã hóa Vigenère</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;max-width:700px;margin:2rem auto;padding:1rem}
+    label{display:block;margin-top:0.6rem}
+    textarea{width:100%;height:120px}
+    input[type=text]{width:100%}
+    button{padding:8px 12px;margin-top:8px}
+    .out{white-space:pre-wrap;background:#fafafa;padding:10px;border:1px solid #ddd;margin-top:10px}
+  </style>
+</head>
+<body>
+  <h1>Mã hóa Vigenère</h1>
+  <label>Văn bản:
+    <textarea id="text"></textarea>
+  </label>
+  <label>Khóa: <input type="text" id="key" value=""></label>
+  <div>
+    <button id="enc">Mã hóa</button>
+    <button id="dec">Giải mã</button>
+    <button id="clear">Xóa</button>
+  </div>
+  <h3>Kết quả</h3>
+  <div id="output" class="out"></div>
+<script>
+function clean(s){ return s.toUpperCase().replace(/[^A-Z]/g,''); }
+function vigenere_encrypt(pt,key){ const s=clean(pt), k=clean(key); let out=''; for(let i=0;i<s.length;i++){ let shift = k[i % k.length].charCodeAt(0) - 65; out += String.fromCharCode((s[i].charCodeAt(0)-65 + shift)%26 + 65); } return out; }
+function vigenere_decrypt(ct,key){ const s=clean(ct), k=clean(key); let out=''; for(let i=0;i<s.length;i++){ let shift = k[i % k.length].charCodeAt(0) - 65; out += String.fromCharCode((s[i].charCodeAt(0)-65 - shift + 26)%26 + 65); } return out; }
+
+document.getElementById('enc').addEventListener('click', ()=>{ const t=document.getElementById('text').value; const k=document.getElementById('key').value||'KEY'; document.getElementById('output').textContent = vigenere_encrypt(t,k); });
+
+document.getElementById('dec').addEventListener('click', ()=>{ const t=document.getElementById('text').value; const k=document.getElementById('key').value||'KEY'; document.getElementById('output').textContent = vigenere_decrypt(t,k); });
+
+document.getElementById('clear').addEventListener('click', ()=>{ document.getElementById('text').value=''; document.getElementById('output').textContent=''; });
+</script>
+</body>
+</html>
