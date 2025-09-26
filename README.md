@@ -3,6 +3,7 @@ BÀI TẬP MÔN: An toàn và bảo mật thông tin
 BÀI TẬP 1:
 TÌM HIỂU CÁC PHƯƠNG PHÁP MÃ HOÁ CỔ ĐIỂN  
 1.Caesar
+
 2.Affine  
 
 3.Hoán vị  
